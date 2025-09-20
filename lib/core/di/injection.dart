@@ -6,6 +6,7 @@ import '../../domain/repositories/ble_repository.dart';
 import '../../domain/usecases/connect_device.dart';
 import '../../domain/usecases/scan_devices.dart';
 import '../../domain/usecases/stream_data.dart';
+import '../../domain/usecases/update_firmware.dart';
 import '../../presentation/bloc/ble_bloc.dart';
 
 final getIt = GetIt.instance;
@@ -21,13 +22,16 @@ Future<void> configureDependencies() async {
   );
   
   // Use Cases
-  getIt.registerLazySingleton(() => ScanDevicesUseCase(getIt<BleRepository>()));
-  getIt.registerLazySingleton(() => ConnectDeviceUseCase(getIt<BleRepository>()));
-  getIt.registerLazySingleton(() => StreamDataUseCase(getIt<BleRepository>()));
+  getIt.registerLazySingleton(()=> ScanDevicesUseCase(getIt<BleRepository>()));
+  getIt.registerLazySingleton(()=> ConnectDeviceUseCase(getIt<BleRepository>()));
+  getIt.registerLazySingleton(()=> StreamDataUseCase(getIt<BleRepository>()));
+  getIt.registerLazySingleton(()=> UpdateFirmwareUseCase(getIt<BleRepository>()));
   
   // BLoC
   getIt.registerFactory(() => BleBloc(
     scanDevicesUseCase: getIt<ScanDevicesUseCase>(),
     connectDeviceUseCase: getIt<ConnectDeviceUseCase>(),
+    streamDataUseCase: getIt<StreamDataUseCase>(),
+    updateFirmwareUseCase: getIt<UpdateFirmwareUseCase>(),
   ));
 }

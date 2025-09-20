@@ -5,14 +5,16 @@ import '../../domain/entities/ble_device.dart';
 import '../../domain/entities/sensor_data.dart';
 import '../../domain/usecases/connect_device.dart';
 import '../../domain/usecases/scan_devices.dart';
+import '../../domain/usecases/stream_data.dart';
+import '../../domain/usecases/update_firmware.dart';
 import 'ble_event.dart';
 import 'ble_state.dart';
 
 class BleBloc extends Bloc<BleEvent, BleState> {
   final ScanDevicesUseCase scanDevicesUseCase;
   final ConnectDeviceUseCase connectDeviceUseCase;
-  // final StreamDataUseCase streamDataUseCase;
-  // final UpdateFirmwareUseCase updateFirmwareUseCase;
+  final StreamDataUseCase streamDataUseCase;
+  final UpdateFirmwareUseCase updateFirmwareUseCase;
   
   StreamSubscription? _scanSubscription;
   StreamSubscription? _dataSubscription;
@@ -24,8 +26,8 @@ class BleBloc extends Bloc<BleEvent, BleState> {
   BleBloc({
     required this.scanDevicesUseCase,
     required this.connectDeviceUseCase,
-    // required this.streamDataUseCase,
-    // required this.updateFirmwareUseCase,
+    required this.streamDataUseCase,
+    required this.updateFirmwareUseCase,
   }) : super(BleInitial()) {
     on<StartScanningEvent>(_onStartScanning);
     on<StopScanningEvent>(_onStopScanning);
