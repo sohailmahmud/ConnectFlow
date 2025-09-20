@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import '../../data/datasources/ble_datasource.dart';
 import '../../data/repositories/ble_repository_impl.dart';
 import '../../domain/repositories/ble_repository.dart';
+import '../../domain/usecases/connect_device.dart';
 import '../../domain/usecases/scan_devices.dart';
 import '../../presentation/bloc/ble_bloc.dart';
 
@@ -24,5 +25,6 @@ Future<void> configureDependencies() async {
   // BLoC
   getIt.registerFactory(() => BleBloc(
     scanDevicesUseCase: getIt<ScanDevicesUseCase>(),
+    connectDeviceUseCase: getIt<ConnectDeviceUseCase>(),
   ));
 }

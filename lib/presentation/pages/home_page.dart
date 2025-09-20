@@ -8,7 +8,7 @@ import '../widgets/data_visualization_widget.dart';
 import '../widgets/ota_update_widget.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

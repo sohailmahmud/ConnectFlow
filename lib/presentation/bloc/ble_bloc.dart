@@ -3,13 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/usecases/usecase.dart';
 import '../../domain/entities/ble_device.dart';
 import '../../domain/entities/sensor_data.dart';
+import '../../domain/usecases/connect_device.dart';
 import '../../domain/usecases/scan_devices.dart';
 import 'ble_event.dart';
 import 'ble_state.dart';
 
 class BleBloc extends Bloc<BleEvent, BleState> {
   final ScanDevicesUseCase scanDevicesUseCase;
-  //final ConnectDeviceUseCase connectDeviceUseCase;
+  final ConnectDeviceUseCase connectDeviceUseCase;
   // final StreamDataUseCase streamDataUseCase;
   // final UpdateFirmwareUseCase updateFirmwareUseCase;
   
@@ -22,7 +23,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
   
   BleBloc({
     required this.scanDevicesUseCase,
-    //required this.connectDeviceUseCase,
+    required this.connectDeviceUseCase,
     // required this.streamDataUseCase,
     // required this.updateFirmwareUseCase,
   }) : super(BleInitial()) {
@@ -57,14 +58,14 @@ class BleBloc extends Bloc<BleEvent, BleState> {
   Future<void> _onConnectToDevice(ConnectToDeviceEvent event, Emitter<BleState> emit) async {
     emit(BleConnecting(event.deviceId));
     
-    // final result = await connectDeviceUseCase(event.deviceId);
-    // result.fold(
-    //   (failure) => emit(BleError('Connection failed: ${failure.toString()}')),
-    //   (device) {
-    //     _connectedDevice = device;
-    //     emit(BleConnected(device));
-    //   },
-    // );
+    final result = await connectDeviceUseCase(event.deviceId);
+    result.fold(
+      (failure) => emit(BleError('Connection failed: ${failure.toString()}')),
+      (device) {
+        _connectedDevice = device;
+        emit(BleConnected(device));
+      },
+    );
   }
   
   Future<void> _onDisconnectFromDevice(DisconnectFromDeviceEvent event, Emitter<BleState> emit) async {
