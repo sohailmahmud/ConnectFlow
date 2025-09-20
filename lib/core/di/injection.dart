@@ -5,6 +5,7 @@ import '../../data/repositories/ble_repository_impl.dart';
 import '../../domain/repositories/ble_repository.dart';
 import '../../domain/usecases/connect_device.dart';
 import '../../domain/usecases/scan_devices.dart';
+import '../../domain/usecases/stream_data.dart';
 import '../../presentation/bloc/ble_bloc.dart';
 
 final getIt = GetIt.instance;
@@ -21,6 +22,8 @@ Future<void> configureDependencies() async {
   
   // Use Cases
   getIt.registerLazySingleton(() => ScanDevicesUseCase(getIt<BleRepository>()));
+  getIt.registerLazySingleton(() => ConnectDeviceUseCase(getIt<BleRepository>()));
+  getIt.registerLazySingleton(() => StreamDataUseCase(getIt<BleRepository>()));
   
   // BLoC
   getIt.registerFactory(() => BleBloc(
