@@ -1,0 +1,232 @@
+name: Release & Deploy
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.0.0)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  validate-release:
+    name: Validate Release
+    runs-on: ubuntu-latest
+    
+    outputs:
+      version: ${{ steps.version.outputs.VERSION }}
+      build-number: ${{ steps.version.outputs.BUILD_NUMBER }}
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.1'
+        channel: 'stable'
+        cache: true
+        
+    - name: Get Version Info
+      id: version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+        
+        # Extract version and build number from pubspec.yaml
+        PUBSPEC_VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+        VERSION_NUMBER=$(echo $PUBSPEC_VERSION | cut -d '+' -f 1)
+        BUILD_NUMBER=$(echo $PUBSPEC_VERSION | cut -d '+' -f 2)
+        
+        echo "VERSION=$VERSION_NUMBER" >> $GITHUB_OUTPUT
+        echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+        
+    - name: Get Dependencies
+      run: flutter pub get
+      
+    - name: Run Full Test Suite
+      run: |
+        flutter analyze
+        flutter test test/ --coverage --reporter=expanded
+        
+    - name: Verify Build
+      run: |
+        flutter build apk --debug
+        flutter build ios --debug --no-codesign
+
+  build-production:
+    name: Build Production Apps
+    runs-on: ubuntu-latest
+    needs: validate-release
+    
+    strategy:
+      matrix:
+        platform: [android, ios]
+        
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.1'
+        channel: 'stable'
+        cache: true
+        
+    - name: Setup Java (Android)
+      if: matrix.platform == 'android'
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+        
+    - name: Get Dependencies
+      run: flutter pub get
+      
+    - name: Build Android Release
+      if: matrix.platform == 'android'
+      run: |
+        flutter build apk --release
+        flutter build appbundle --release
+        
+    - name: Build iOS Release
+      if: matrix.platform == 'ios'
+      run: flutter build ios --release --no-codesign
+      
+    - name: Upload Android Artifacts
+      if: matrix.platform == 'android'
+      uses: actions/upload-artifact@v3
+      with:
+        name: android-release
+        path: |
+          build/app/outputs/flutter-apk/app-release.apk
+          build/app/outputs/bundle/release/app-release.aab
+          
+    - name: Upload iOS Artifacts
+      if: matrix.platform == 'ios'
+      uses: actions/upload-artifact@v3
+      with:
+        name: ios-release
+        path: build/ios/iphoneos/Runner.app
+
+  create-github-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [validate-release, build-production]
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Download Android Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: android-release
+        path: ./release/android
+        
+    - name: Download iOS Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: ios-release
+        path: ./release/ios
+        
+    - name: Generate Changelog
+      id: changelog
+      run: |
+        # Generate changelog from commits since last tag
+        LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+        if [[ -n "$LAST_TAG" ]]; then
+          CHANGELOG=$(git log --pretty=format:"- %s" ${LAST_TAG}..HEAD)
+        else
+          CHANGELOG="- Initial release"
+        fi
+        
+        # Save changelog to file
+        cat > CHANGELOG.md << EOF
+        ## What's New in v${{ needs.validate-release.outputs.version }}
+        
+        $CHANGELOG
+        
+        ## Features
+        - 📱 BLE device management and connection
+        - 📊 Real-time sensor data streaming
+        - 🔄 Over-the-air firmware updates
+        - 📈 Data visualization and monitoring
+        - ⚡ Optimized performance and stability
+        
+        ## Technical Details
+        - Built with Flutter 3.35.1
+        - Comprehensive test coverage
+        - Clean architecture implementation
+        - BLoC pattern for state management
+        
+        ## Downloads
+        - **Android APK**: For sideloading on Android devices
+        - **Android App Bundle**: For Play Store distribution
+        EOF
+        
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ needs.validate-release.outputs.version }}
+        release_name: ConnectFlow v${{ needs.validate-release.outputs.version }}
+        body_path: CHANGELOG.md
+        draft: false
+        prerelease: ${{ github.event.inputs.prerelease == 'true' }}
+        
+    - name: Upload Android APK
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./release/android/app-release.apk
+        asset_name: ConnectFlow-v${{ needs.validate-release.outputs.version }}.apk
+        asset_content_type: application/vnd.android.package-archive
+        
+    - name: Upload Android App Bundle
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./release/android/app-release.aab
+        asset_name: ConnectFlow-v${{ needs.validate-release.outputs.version }}.aab
+        asset_content_type: application/octet-stream
+
+  notify-release:
+    name: Notify Release
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-github-release]
+    if: always()
+    
+    steps:
+    - name: Notify Success
+      if: needs.create-github-release.result == 'success'
+      run: |
+        echo "🎉 Release v${{ needs.validate-release.outputs.version }} created successfully!"
+        echo "📱 Android APK and App Bundle are ready for distribution"
+        echo "🔗 Check the release page for download links"
+        
+    - name: Notify Failure
+      if: needs.create-github-release.result == 'failure'
+      run: |
+        echo "❌ Release creation failed"
+        echo "Please check the workflow logs for details"
+        exit 1

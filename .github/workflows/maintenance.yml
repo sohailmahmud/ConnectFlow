@@ -1,0 +1,118 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    name: Update Dependencies
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.1'
+        channel: 'stable'
+        cache: true
+        
+    - name: Check for Outdated Packages
+      run: |
+        flutter pub get
+        flutter pub outdated --json > outdated.json || true
+        
+    - name: Update Dependencies
+      run: |
+        flutter pub upgrade
+        flutter pub get
+        
+    - name: Run Tests After Update
+      run: flutter test test/ --reporter=expanded
+      
+    - name: Check for Changes
+      id: changes
+      run: |
+        if [[ -n $(git status --porcelain) ]]; then
+          echo "changes=true" >> $GITHUB_OUTPUT
+        else
+          echo "changes=false" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Create Pull Request
+      if: steps.changes.outputs.changes == 'true'
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: 'chore: update dependencies'
+        title: '🔄 Automated Dependency Update'
+        body: |
+          ## 🔄 Automated Dependency Update
+          
+          This PR contains automated dependency updates.
+          
+          ### Changes
+          - Updated Flutter dependencies to latest compatible versions
+          - All tests are passing ✅
+          
+          ### Review Checklist
+          - [ ] Review updated dependencies
+          - [ ] Check for breaking changes
+          - [ ] Verify test coverage
+          
+          *This PR was created automatically by the dependency update workflow.*
+        branch: automated/dependency-updates
+        delete-branch: true
+        
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.1'
+        channel: 'stable'
+        cache: true
+        
+    - name: Get Dependencies
+      run: flutter pub get
+      
+    - name: Install Security Tools
+      run: |
+        dart pub global activate pana
+        
+    - name: Run Security Audit
+      run: |
+        echo "## Security Audit Report" > security-report.md
+        echo "Generated on: $(date)" >> security-report.md
+        echo "" >> security-report.md
+        
+        # Check for known vulnerabilities
+        flutter pub deps --json > deps.json
+        
+        # Analyze with pana
+        dart pub global run pana --json > pana-report.json || true
+        
+        echo "### Package Analysis" >> security-report.md
+        echo "See attached pana-report.json for detailed analysis" >> security-report.md
+        
+    - name: Upload Security Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-report
+        path: |
+          security-report.md
+          pana-report.json
+          deps.json

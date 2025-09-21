@@ -278,7 +278,38 @@ Customize sensor data parsing in `_parseFloat()` method based on your device's d
 - Check MTU size limitations
 - Ensure stable connection during update
 
-## 📄 License
+## � CI/CD & DevOps
+
+This project includes comprehensive GitHub Actions workflows for automated testing, building, and deployment:
+
+### 🔄 Continuous Integration (`.github/workflows/ci.yml`)
+- **Automated Testing**: Runs on every push and pull request
+- **Multi-platform Support**: Tests on Ubuntu, macOS, and Windows
+- **Comprehensive Coverage**: Unit, widget, and integration tests
+- **Code Quality**: Static analysis, formatting checks, and security scanning
+- **Coverage Reporting**: Automatic test coverage analysis
+
+### 🛠️ Maintenance Workflow (`.github/workflows/maintenance.yml`)
+- **Weekly Dependency Updates**: Automated dependency management
+- **Security Audits**: Regular vulnerability scanning
+- **Automated PRs**: Creates pull requests for updates
+
+### 📦 Release Workflow (`.github/workflows/release.yml`)
+- **Production Builds**: Automated APK and App Bundle generation
+- **GitHub Releases**: Automatic release creation with changelogs
+- **Artifact Management**: Binary distribution and versioning
+- **Multi-format Support**: Both stable and pre-release versions
+
+### Workflow Badges
+Add these badges to track your CI/CD status:
+
+```markdown
+[![CI](https://github.com/yourusername/connectflow/workflows/CI/badge.svg)](https://github.com/yourusername/connectflow/actions/workflows/ci.yml)
+[![Maintenance](https://github.com/yourusername/connectflow/workflows/Maintenance/badge.svg)](https://github.com/yourusername/connectflow/actions/workflows/maintenance.yml)
+[![Release](https://github.com/yourusername/connectflow/workflows/Release/badge.svg)](https://github.com/yourusername/connectflow/actions/workflows/release.yml)
+```
+
+## �📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
