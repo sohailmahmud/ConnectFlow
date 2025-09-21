@@ -2,9 +2,12 @@
 
 > Flutter BLE app with clean architecture, BLoC pattern, real-time data streaming, and OTA firmware updates
 
-<!-- [![Flutter Version](https://img.shields.io/badge/Flutter-3.0+-blue.svg)](https://flutter.dev/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-lightgrey.svg)](https://flutter.dev/) -->
+[![Dart](https://img.shields.io/badge/Dart-3.9.0+-00579C.svg?style=flat&logo=dart&logoColor=white)](https://dart.dev/)
+[![Flutter](https://img.shields.io/badge/Flutter-3.35.1+-02569B.svg?style=flat&logo=flutter&logoColor=white)](https://flutter.dev/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-lightgrey.svg?style=flat)](https://flutter.dev/)
+[![Test Coverage](https://img.shields.io/badge/coverage-0%25-red.svg?style=flat)](https://github.com/sohailmahmud/ConnectFlow)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg?style=flat)](https://github.com/sohailmahmud/ConnectFlow)
 
 A professional-grade Flutter application for managing Bluetooth Low Energy (BLE) devices with real-time sensor monitoring, over-the-air firmware updates, and comprehensive device control capabilities.
 
