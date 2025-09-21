@@ -85,21 +85,21 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     }
     
     _dataSubscription?.cancel();
-    // _dataSubscription = streamDataUseCase(event.deviceId).listen(
-    //   (result) {
-    //     result.fold(
-    //       (failure) => emit(BleError('Data streaming failed: ${failure.toString()}')),
-    //       (data) {
-    //         _dataHistory.add(data);
-    //         // Keep only last 100 readings
-    //         if (_dataHistory.length > 100) {
-    //           _dataHistory.removeAt(0);
-    //         }
-    //         emit(BleDataStreaming(_connectedDevice!, List.from(_dataHistory)));
-    //       },
-    //     );
-    //   },
-    // );
+    _dataSubscription = streamDataUseCase(event.deviceId).listen(
+      (result) {
+        result.fold(
+          (failure) => emit(BleError('Data streaming failed: ${failure.toString()}')),
+          (data) {
+            _dataHistory.add(data);
+            // Keep only last 100 readings
+            if (_dataHistory.length > 100) {
+              _dataHistory.removeAt(0);
+            }
+            emit(BleDataStreaming(_connectedDevice!, List.from(_dataHistory)));
+          },
+        );
+      },
+    );
   }
   
   Future<void> _onStopDataStream(StopDataStreamEvent event, Emitter<BleState> emit) async {

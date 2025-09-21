@@ -3,7 +3,7 @@
 > Flutter BLE app with clean architecture, BLoC pattern, real-time data streaming, and OTA firmware updates
 
 [![Dart](https://img.shields.io/badge/Dart-3.9.0+-00579C.svg?style=flat&logo=dart&logoColor=white)](https://dart.dev/)
-[![Flutter](https://img.shields.io/badge/Flutter-3.35.1+-02569B.svg?style=flat&logo=flutter&logoColor=white)](https://flutter.dev/)
+[![Flutter](https://img.shields.io/badge/Flutter-3.35.0+-02569B.svg?style=flat&logo=flutter&logoColor=white)](https://flutter.dev/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-lightgrey.svg?style=flat)](https://flutter.dev/)
 [![Test Coverage](https://img.shields.io/badge/coverage-0%25-red.svg?style=flat)](https://github.com/sohailmahmud/ConnectFlow)
@@ -182,25 +182,42 @@ BlocBuilder<BleBloc, BleState>(
 
 ### Running Tests
 ```bash
-# Unit tests
+# Domain layer tests
+flutter test test/domain/
+
+# Data layer tests  
+flutter test test/data/
+
+# Presentation layer tests
+flutter test test/presentation/
+
+# All unit tests
 flutter test
 
 # Integration tests
 flutter test integration_test/
 
-# Test coverage
+# With coverage
 flutter test --coverage
 ```
 
 ### Test Structure
 ```
 test/
-├── unit/
-│   ├── domain/
-│   ├── data/
-│   └── presentation/
-└── integration/
-    └── app_test.dart
+├── core/
+│   └── errors/failures_test.dart
+├── domain/
+│   ├── entities/
+│   ├── usecases/
+├── data/
+│   ├── models/
+│   └── repositories/
+├── presentation/
+│   ├── bloc/
+│   └── widgets/
+├── mocks/
+├── test_helpers/
+└── integration_test/
 ```
 
 ## 🔧 Configuration
