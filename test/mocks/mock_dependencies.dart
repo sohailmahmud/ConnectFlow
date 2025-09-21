@@ -15,8 +15,11 @@ class MockBleRepository extends Mock implements BleRepository {}
 
 // Use Cases
 class MockScanDevicesUseCase extends Mock implements ScanDevicesUseCase {}
+
 class MockConnectDeviceUseCase extends Mock implements ConnectDeviceUseCase {}
+
 class MockStreamDataUseCase extends Mock implements StreamDataUseCase {}
+
 class MockUpdateFirmwareUseCase extends Mock implements UpdateFirmwareUseCase {}
 
 // BLoC
@@ -24,8 +27,7 @@ class MockBleBloc extends Mock implements BleBloc {}
 
 // Register fallback values for mocktail
 void registerFallbackValues() {
-  registerFallbackValue(UpdateFirmwareParams(
-    deviceId: 'fallback-device-id',
-    firmwareData: [],
-  ));
+  registerFallbackValue(
+    UpdateFirmwareParams(deviceId: 'fallback-device-id', firmwareData: []),
+  );
 }

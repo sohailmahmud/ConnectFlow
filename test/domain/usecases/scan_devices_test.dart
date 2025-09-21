@@ -38,8 +38,9 @@ void main() {
 
     test('should return stream of device lists from repository', () async {
       // Arrange
-      when(() => mockBleRepository.scanForDevices())
-          .thenAnswer((_) => Stream.value(const Right(tDevices)));
+      when(
+        () => mockBleRepository.scanForDevices(),
+      ).thenAnswer((_) => Stream.value(const Right(tDevices)));
 
       // Act
       final result = usecase(const NoParams());
@@ -52,8 +53,9 @@ void main() {
     test('should return failure when repository fails', () async {
       // Arrange
       const tFailure = BleFailure('Scan failed');
-      when(() => mockBleRepository.scanForDevices())
-          .thenAnswer((_) => Stream.value(const Left(tFailure)));
+      when(
+        () => mockBleRepository.scanForDevices(),
+      ).thenAnswer((_) => Stream.value(const Left(tFailure)));
 
       // Act
       final result = usecase(const NoParams());

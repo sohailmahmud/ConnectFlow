@@ -8,7 +8,7 @@ class BleDeviceModel extends BleDevice {
     required super.isConnected,
     required super.advertisementData,
   });
-  
+
   factory BleDeviceModel.fromJson(Map<String, dynamic> json) {
     return BleDeviceModel(
       id: json['id'],
@@ -18,7 +18,7 @@ class BleDeviceModel extends BleDevice {
       advertisementData: json['advertisementData'],
     );
   }
-  
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

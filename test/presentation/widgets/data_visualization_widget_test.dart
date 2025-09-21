@@ -22,11 +22,11 @@ void main() {
 
   setUp(() {
     mockBleBloc = MockBleBloc();
-    
+
     // Setup default stream for the mock
-    when(() => mockBleBloc.stream).thenAnswer(
-      (_) => Stream<BleState>.value(BleInitial()),
-    );
+    when(
+      () => mockBleBloc.stream,
+    ).thenAnswer((_) => Stream<BleState>.value(BleInitial()));
     when(() => mockBleBloc.state).thenReturn(BleInitial());
   });
 
@@ -77,7 +77,9 @@ void main() {
       expect(find.byIcon(Icons.stop), findsOneWidget);
     });
 
-    testWidgets('should display sensor data cards when data is available', (tester) async {
+    testWidgets('should display sensor data cards when data is available', (
+      tester,
+    ) async {
       // Arrange & Act
       await tester.pumpWidget(createTestWidget(tSensorData));
 
@@ -102,7 +104,9 @@ void main() {
       expect(find.text('26.0°C, 61.0%'), findsOneWidget);
     });
 
-    testWidgets('should show no data message when history is empty', (tester) async {
+    testWidgets('should show no data message when history is empty', (
+      tester,
+    ) async {
       // Arrange & Act
       await tester.pumpWidget(createTestWidget([]));
 
@@ -110,7 +114,9 @@ void main() {
       expect(find.text('No data available'), findsOneWidget);
     });
 
-    testWidgets('should trigger stop streaming when stop button is tapped', (tester) async {
+    testWidgets('should trigger stop streaming when stop button is tapped', (
+      tester,
+    ) async {
       // Arrange
       await tester.pumpWidget(createTestWidget(tSensorData));
 

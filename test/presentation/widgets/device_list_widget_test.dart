@@ -21,11 +21,11 @@ void main() {
 
   setUp(() {
     mockBleBloc = MockBleBloc();
-    
+
     // Setup default stream for the mock
-    when(() => mockBleBloc.stream).thenAnswer(
-      (_) => Stream<BleState>.value(BleInitial()),
-    );
+    when(
+      () => mockBleBloc.stream,
+    ).thenAnswer((_) => Stream<BleState>.value(BleInitial()));
     when(() => mockBleBloc.state).thenReturn(BleInitial());
   });
 
@@ -33,15 +33,15 @@ void main() {
     return MaterialApp(
       home: BlocProvider<BleBloc>.value(
         value: mockBleBloc,
-        child: Scaffold(
-          body: DeviceListWidget(state: state),
-        ),
+        child: Scaffold(body: DeviceListWidget(state: state)),
       ),
     );
   }
 
   group('DeviceListWidget', () {
-    testWidgets('should show scan button when in initial state', (tester) async {
+    testWidgets('should show scan button when in initial state', (
+      tester,
+    ) async {
       // Arrange
       await tester.pumpWidget(createTestWidget(BleInitial()));
 
@@ -83,15 +83,22 @@ void main() {
       expect(find.text('Connect'), findsOneWidget);
     });
 
-    testWidgets('should show no devices message when list is empty', (tester) async {
+    testWidgets('should show no devices message when list is empty', (
+      tester,
+    ) async {
       // Arrange
       await tester.pumpWidget(createTestWidget(const BleDevicesFound([])));
 
       // Assert
-      expect(find.text('No devices found. Try scanning again.'), findsOneWidget);
+      expect(
+        find.text('No devices found. Try scanning again.'),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('should call connect when connect button is tapped', (tester) async {
+    testWidgets('should call connect when connect button is tapped', (
+      tester,
+    ) async {
       // Arrange
       const devices = [
         BleDevice(

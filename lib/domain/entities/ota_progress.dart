@@ -7,14 +7,14 @@ class OtaProgress extends Equatable {
   final double progress;
   final String? message;
   final String? error;
-  
+
   const OtaProgress({
     required this.status,
     required this.progress,
     this.message,
     this.error,
   });
-  
+
   @override
   List<Object?> get props => [status, progress, message, error];
 }

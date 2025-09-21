@@ -56,17 +56,20 @@ void main() {
     });
 
     group('JSON serialization', () {
-      test('should maintain data integrity through serialize/deserialize cycle', () {
-        // Arrange
-        final jsonString = json.encode(tSensorDataModel.toJson());
+      test(
+        'should maintain data integrity through serialize/deserialize cycle',
+        () {
+          // Arrange
+          final jsonString = json.encode(tSensorDataModel.toJson());
 
-        // Act
-        final jsonMap = json.decode(jsonString);
-        final result = SensorDataModel.fromJson(jsonMap);
+          // Act
+          final jsonMap = json.decode(jsonString);
+          final result = SensorDataModel.fromJson(jsonMap);
 
-        // Assert
-        expect(result, tSensorDataModel);
-      });
+          // Assert
+          expect(result, tSensorDataModel);
+        },
+      );
     });
   });
 }

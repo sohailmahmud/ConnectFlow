@@ -6,7 +6,7 @@ class SensorData extends Equatable {
   final double humidity;
   final double pressure;
   final int batteryLevel;
-  
+
   const SensorData({
     required this.timestamp,
     required this.temperature,
@@ -14,7 +14,13 @@ class SensorData extends Equatable {
     required this.pressure,
     required this.batteryLevel,
   });
-  
+
   @override
-  List<Object> get props => [timestamp, temperature, humidity, pressure, batteryLevel];
+  List<Object> get props => [
+    timestamp,
+    temperature,
+    humidity,
+    pressure,
+    batteryLevel,
+  ];
 }

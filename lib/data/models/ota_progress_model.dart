@@ -7,7 +7,7 @@ class OtaProgressModel extends OtaProgress {
     super.message,
     super.error,
   });
-  
+
   factory OtaProgressModel.fromJson(Map<String, dynamic> json) {
     return OtaProgressModel(
       status: OtaStatus.values.firstWhere(
@@ -18,7 +18,7 @@ class OtaProgressModel extends OtaProgress {
       error: json['error'],
     );
   }
-  
+
   Map<String, dynamic> toJson() {
     return {
       'status': status.toString().split('.').last,

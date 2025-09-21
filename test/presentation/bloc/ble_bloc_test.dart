@@ -15,8 +15,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockScanDevicesUseCase extends Mock implements ScanDevicesUseCase {}
+
 class MockConnectDeviceUseCase extends Mock implements ConnectDeviceUseCase {}
+
 class MockStreamDataUseCase extends Mock implements StreamDataUseCase {}
+
 class MockUpdateFirmwareUseCase extends Mock implements UpdateFirmwareUseCase {}
 
 void main() {
@@ -63,15 +66,13 @@ void main() {
       blocTest<BleBloc, BleState>(
         'should emit [BleScanning, BleDevicesFound] when scanning succeeds',
         build: () {
-          when(() => mockScanDevicesUseCase(const NoParams()))
-              .thenAnswer((_) => Stream.value(const Right(tDevices)));
+          when(
+            () => mockScanDevicesUseCase(const NoParams()),
+          ).thenAnswer((_) => Stream.value(const Right(tDevices)));
           return bloc;
         },
         act: (bloc) => bloc.add(StartScanningEvent()),
-        expect: () => [
-          BleScanning(),
-          const BleDevicesFound(tDevices),
-        ],
+        expect: () => [BleScanning(), const BleDevicesFound(tDevices)],
         verify: (_) {
           verify(() => mockScanDevicesUseCase(const NoParams())).called(1);
         },
@@ -80,15 +81,13 @@ void main() {
       blocTest<BleBloc, BleState>(
         'should emit [BleScanning, BleError] when scanning fails',
         build: () {
-          when(() => mockScanDevicesUseCase(const NoParams()))
-              .thenAnswer((_) => Stream.value(const Left(BleFailure('Scan failed'))));
+          when(() => mockScanDevicesUseCase(const NoParams())).thenAnswer(
+            (_) => Stream.value(const Left(BleFailure('Scan failed'))),
+          );
           return bloc;
         },
         act: (bloc) => bloc.add(StartScanningEvent()),
-        expect: () => [
-          BleScanning(),
-          isA<BleError>(),
-        ],
+        expect: () => [BleScanning(), isA<BleError>()],
       );
     });
 
@@ -98,8 +97,9 @@ void main() {
       blocTest<BleBloc, BleState>(
         'should emit [BleConnecting, BleConnected] when connection succeeds',
         build: () {
-          when(() => mockConnectDeviceUseCase(tDeviceId))
-              .thenAnswer((_) async => const Right(tDevice));
+          when(
+            () => mockConnectDeviceUseCase(tDeviceId),
+          ).thenAnswer((_) async => const Right(tDevice));
           return bloc;
         },
         act: (bloc) => bloc.add(const ConnectToDeviceEvent(tDeviceId)),
@@ -115,15 +115,13 @@ void main() {
       blocTest<BleBloc, BleState>(
         'should emit [BleConnecting, BleError] when connection fails',
         build: () {
-          when(() => mockConnectDeviceUseCase(tDeviceId))
-              .thenAnswer((_) async => Left(ConnectionFailure()));
+          when(
+            () => mockConnectDeviceUseCase(tDeviceId),
+          ).thenAnswer((_) async => Left(ConnectionFailure()));
           return bloc;
         },
         act: (bloc) => bloc.add(const ConnectToDeviceEvent(tDeviceId)),
-        expect: () => [
-          const BleConnecting(tDeviceId),
-          isA<BleError>(),
-        ],
+        expect: () => [const BleConnecting(tDeviceId), isA<BleError>()],
       );
     });
 
@@ -141,11 +139,13 @@ void main() {
         'should emit [BleDataStreaming] when data streaming starts successfully',
         build: () {
           // Mock successful connection first
-          when(() => mockConnectDeviceUseCase(tDeviceId))
-              .thenAnswer((_) async => Right(tDevice));
+          when(
+            () => mockConnectDeviceUseCase(tDeviceId),
+          ).thenAnswer((_) async => Right(tDevice));
           // Mock successful data streaming
-          when(() => mockStreamDataUseCase(tDeviceId))
-              .thenAnswer((_) => Stream.value(Right(tSensorData)));
+          when(
+            () => mockStreamDataUseCase(tDeviceId),
+          ).thenAnswer((_) => Stream.value(Right(tSensorData)));
           return bloc;
         },
         act: (bloc) async {
@@ -170,9 +170,7 @@ void main() {
         'should emit [BleError] when no device is connected',
         build: () => bloc,
         act: (bloc) => bloc.add(const StartDataStreamEvent(tDeviceId)),
-        expect: () => [
-          const BleError('No device connected'),
-        ],
+        expect: () => [const BleError('No device connected')],
         verify: (_) {
           verifyNever(() => mockStreamDataUseCase(any()));
         },

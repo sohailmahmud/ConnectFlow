@@ -13,10 +13,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('BLE Device Manager'),
-        elevation: 2,
-      ),
+      appBar: AppBar(title: const Text('BLE Device Manager'), elevation: 2),
       body: BlocConsumer<BleBloc, BleState>(
         listener: (context, state) {
           if (state is BleError) {
@@ -34,9 +31,11 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildBody(BuildContext context, BleState state) {
-    if (state is BleInitial || state is BleScanning || state is BleDevicesFound) {
+    if (state is BleInitial ||
+        state is BleScanning ||
+        state is BleDevicesFound) {
       return DeviceListWidget(state: state);
     } else if (state is BleConnecting) {
       return const Center(
@@ -57,10 +56,7 @@ class HomePage extends StatelessWidget {
         dataHistory: state.dataHistory,
       );
     } else if (state is BleOtaUpdating) {
-      return OtaUpdateWidget(
-        device: state.device,
-        progress: state.progress,
-      );
+      return OtaUpdateWidget(device: state.device, progress: state.progress);
     } else {
       return const Center(child: Text('Unknown state'));
     }

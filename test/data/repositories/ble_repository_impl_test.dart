@@ -31,8 +31,9 @@ void main() {
     group('scanForDevices', () {
       test('should return device list when datasource succeeds', () async {
         // Arrange
-        when(() => mockDataSource.scanForDevices())
-            .thenAnswer((_) => Stream.value([tDeviceModel]));
+        when(
+          () => mockDataSource.scanForDevices(),
+        ).thenAnswer((_) => Stream.value([tDeviceModel]));
 
         // Act
         final result = repository.scanForDevices();
@@ -43,7 +44,7 @@ void main() {
           events.add(event);
           break; // Only take the first event
         }
-        
+
         expect(events.length, 1);
         expect(events.first.isRight(), true);
         events.first.fold(
@@ -55,17 +56,15 @@ void main() {
 
       test('should return failure when datasource throws exception', () async {
         // Arrange
-        when(() => mockDataSource.scanForDevices())
-            .thenAnswer((_) => Stream.error(Exception('Scan failed')));
+        when(
+          () => mockDataSource.scanForDevices(),
+        ).thenAnswer((_) => Stream.error(Exception('Scan failed')));
 
         // Act
         final result = repository.scanForDevices();
 
         // Assert
-        await expectLater(
-          result,
-          emits(isA<Left<Failure, List<dynamic>>>()),
-        );
+        await expectLater(result, emits(isA<Left<Failure, List<dynamic>>>()));
       });
     });
 
@@ -80,8 +79,9 @@ void main() {
 
       test('should return connected device when datasource succeeds', () async {
         // Arrange
-        when(() => mockDataSource.connectToDevice(tDeviceId))
-            .thenAnswer((_) async => tConnectedDeviceModel);
+        when(
+          () => mockDataSource.connectToDevice(tDeviceId),
+        ).thenAnswer((_) async => tConnectedDeviceModel);
 
         // Act
         final result = await repository.connectToDevice(tDeviceId);
@@ -93,8 +93,9 @@ void main() {
 
       test('should return failure when datasource throws exception', () async {
         // Arrange
-        when(() => mockDataSource.connectToDevice(tDeviceId))
-            .thenThrow(Exception('Connection failed'));
+        when(
+          () => mockDataSource.connectToDevice(tDeviceId),
+        ).thenThrow(Exception('Connection failed'));
 
         // Act
         final result = await repository.connectToDevice(tDeviceId);

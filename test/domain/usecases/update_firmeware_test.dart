@@ -33,23 +33,26 @@ void main() {
         message: 'Transferring...',
       );
 
-      when(() => mockBleRepository.updateFirmware(tDeviceId, tFirmwareData))
-          .thenAnswer((_) => Stream.value(const Right(tProgress)));
+      when(
+        () => mockBleRepository.updateFirmware(tDeviceId, tFirmwareData),
+      ).thenAnswer((_) => Stream.value(const Right(tProgress)));
 
       // Act
       final result = usecase(tParams);
 
       // Assert
       await expectLater(result, emits(const Right(tProgress)));
-      verify(() => mockBleRepository.updateFirmware(tDeviceId, tFirmwareData))
-          .called(1);
+      verify(
+        () => mockBleRepository.updateFirmware(tDeviceId, tFirmwareData),
+      ).called(1);
     });
 
     test('should return failure when repository fails', () async {
       // Arrange
       const tFailure = OtaUpdateFailure('Update failed');
-      when(() => mockBleRepository.updateFirmware(tDeviceId, tFirmwareData))
-          .thenAnswer((_) => Stream.value(const Left(tFailure)));
+      when(
+        () => mockBleRepository.updateFirmware(tDeviceId, tFirmwareData),
+      ).thenAnswer((_) => Stream.value(const Left(tFailure)));
 
       // Act
       final result = usecase(tParams);
@@ -67,10 +70,11 @@ void main() {
         OtaProgress(status: OtaStatus.completed, progress: 1.0),
       ];
 
-      when(() => mockBleRepository.updateFirmware(tDeviceId, tFirmwareData))
-          .thenAnswer((_) => Stream.fromIterable(
-                progressSequence.map((p) => Right(p)),
-              ));
+      when(
+        () => mockBleRepository.updateFirmware(tDeviceId, tFirmwareData),
+      ).thenAnswer(
+        (_) => Stream.fromIterable(progressSequence.map((p) => Right(p))),
+      );
 
       // Act
       final result = usecase(tParams);

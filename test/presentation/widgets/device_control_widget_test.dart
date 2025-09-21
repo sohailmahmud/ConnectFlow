@@ -21,11 +21,11 @@ void main() {
 
   setUp(() {
     mockBleBloc = MockBleBloc();
-    
+
     // Setup default stream for the mock
-    when(() => mockBleBloc.stream).thenAnswer(
-      (_) => Stream<BleState>.value(BleInitial()),
-    );
+    when(
+      () => mockBleBloc.stream,
+    ).thenAnswer((_) => Stream<BleState>.value(BleInitial()));
     when(() => mockBleBloc.state).thenReturn(BleInitial());
   });
 
@@ -41,9 +41,7 @@ void main() {
     return MaterialApp(
       home: BlocProvider<BleBloc>.value(
         value: mockBleBloc,
-        child: const Scaffold(
-          body: DeviceControlWidget(device: tDevice),
-        ),
+        child: const Scaffold(body: DeviceControlWidget(device: tDevice)),
       ),
     );
   }
@@ -74,7 +72,9 @@ void main() {
       expect(find.byIcon(Icons.bluetooth_disabled), findsOneWidget);
     });
 
-    testWidgets('should trigger data streaming when button is tapped', (tester) async {
+    testWidgets('should trigger data streaming when button is tapped', (
+      tester,
+    ) async {
       // Arrange
       await tester.pumpWidget(createTestWidget());
 
@@ -86,7 +86,9 @@ void main() {
       verify(() => mockBleBloc.add(any())).called(1);
     });
 
-    testWidgets('should show firmware update dialog when button is tapped', (tester) async {
+    testWidgets('should show firmware update dialog when button is tapped', (
+      tester,
+    ) async {
       // Arrange
       await tester.pumpWidget(createTestWidget());
 
@@ -96,12 +98,17 @@ void main() {
 
       // Assert
       expect(find.text('Firmware Update'), findsOneWidget);
-      expect(find.textContaining('This will simulate a firmware update process'), findsOneWidget);
+      expect(
+        find.textContaining('This will simulate a firmware update process'),
+        findsOneWidget,
+      );
       expect(find.text('Cancel'), findsOneWidget);
       expect(find.text('Start Update'), findsOneWidget);
     });
 
-    testWidgets('should trigger disconnect when disconnect button is tapped', (tester) async {
+    testWidgets('should trigger disconnect when disconnect button is tapped', (
+      tester,
+    ) async {
       // Arrange
       await tester.pumpWidget(createTestWidget());
 
@@ -113,7 +120,9 @@ void main() {
       verify(() => mockBleBloc.add(any())).called(1);
     });
 
-    testWidgets('should start firmware update when confirmed in dialog', (tester) async {
+    testWidgets('should start firmware update when confirmed in dialog', (
+      tester,
+    ) async {
       // Arrange
       await tester.pumpWidget(createTestWidget());
 

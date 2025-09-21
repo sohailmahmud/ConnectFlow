@@ -66,17 +66,20 @@ void main() {
     });
 
     group('JSON serialization', () {
-      test('should maintain data integrity through serialize/deserialize cycle', () {
-        // Arrange
-        final jsonString = json.encode(tOtaProgressModel.toJson());
+      test(
+        'should maintain data integrity through serialize/deserialize cycle',
+        () {
+          // Arrange
+          final jsonString = json.encode(tOtaProgressModel.toJson());
 
-        // Act
-        final jsonMap = json.decode(jsonString);
-        final result = OtaProgressModel.fromJson(jsonMap);
+          // Act
+          final jsonMap = json.decode(jsonString);
+          final result = OtaProgressModel.fromJson(jsonMap);
 
-        // Assert
-        expect(result, tOtaProgressModel);
-      });
+          // Assert
+          expect(result, tOtaProgressModel);
+        },
+      );
     });
   });
 }

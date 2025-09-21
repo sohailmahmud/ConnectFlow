@@ -29,8 +29,9 @@ void main() {
 
     test('should return connected device when connection succeeds', () async {
       // Arrange
-      when(() => mockBleRepository.connectToDevice(tDeviceId))
-          .thenAnswer((_) async => const Right(tConnectedDevice));
+      when(
+        () => mockBleRepository.connectToDevice(tDeviceId),
+      ).thenAnswer((_) async => const Right(tConnectedDevice));
 
       // Act
       final result = await usecase(tDeviceId);
@@ -43,8 +44,9 @@ void main() {
     test('should return failure when connection fails', () async {
       // Arrange
       final tFailure = ConnectionFailure();
-      when(() => mockBleRepository.connectToDevice(tDeviceId))
-          .thenAnswer((_) async => Left(tFailure));
+      when(
+        () => mockBleRepository.connectToDevice(tDeviceId),
+      ).thenAnswer((_) async => Left(tFailure));
 
       // Act
       final result = await usecase(tDeviceId);

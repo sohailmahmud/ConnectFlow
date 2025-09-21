@@ -6,7 +6,7 @@ class BleDevice extends Equatable {
   final int rssi;
   final bool isConnected;
   final Map<String, dynamic> advertisementData;
-  
+
   const BleDevice({
     required this.id,
     required this.name,
@@ -14,7 +14,7 @@ class BleDevice extends Equatable {
     required this.isConnected,
     required this.advertisementData,
   });
-  
+
   BleDevice copyWith({
     String? id,
     String? name,
@@ -30,7 +30,7 @@ class BleDevice extends Equatable {
       advertisementData: advertisementData ?? this.advertisementData,
     );
   }
-  
+
   @override
   List<Object?> get props => [id, name, rssi, isConnected, advertisementData];
 }

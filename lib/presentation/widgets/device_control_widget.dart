@@ -6,7 +6,7 @@ import '../bloc/ble_event.dart';
 
 class DeviceControlWidget extends StatelessWidget {
   final BleDevice device;
-  
+
   const DeviceControlWidget({super.key, required this.device});
 
   @override
@@ -28,7 +28,10 @@ class DeviceControlWidget extends StatelessWidget {
                       const SizedBox(width: 8),
                       const Text(
                         'Connected Device',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -77,7 +80,7 @@ class DeviceControlWidget extends StatelessWidget {
       ),
     );
   }
-  
+
   void _showFirmwareUpdateDialog(BuildContext context) {
     showDialog(
       context: context,

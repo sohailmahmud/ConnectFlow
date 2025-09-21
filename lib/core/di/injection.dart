@@ -15,23 +15,29 @@ final getIt = GetIt.instance;
 Future<void> configureDependencies() async {
   // Data Sources
   getIt.registerLazySingleton<BleDataSource>(() => BleDataSourceImpl());
-  
+
   // Repositories
   getIt.registerLazySingleton<BleRepository>(
     () => BleRepositoryImpl(getIt<BleDataSource>()),
   );
-  
+
   // Use Cases
-  getIt.registerLazySingleton(()=> ScanDevicesUseCase(getIt<BleRepository>()));
-  getIt.registerLazySingleton(()=> ConnectDeviceUseCase(getIt<BleRepository>()));
-  getIt.registerLazySingleton(()=> StreamDataUseCase(getIt<BleRepository>()));
-  getIt.registerLazySingleton(()=> UpdateFirmwareUseCase(getIt<BleRepository>()));
-  
+  getIt.registerLazySingleton(() => ScanDevicesUseCase(getIt<BleRepository>()));
+  getIt.registerLazySingleton(
+    () => ConnectDeviceUseCase(getIt<BleRepository>()),
+  );
+  getIt.registerLazySingleton(() => StreamDataUseCase(getIt<BleRepository>()));
+  getIt.registerLazySingleton(
+    () => UpdateFirmwareUseCase(getIt<BleRepository>()),
+  );
+
   // BLoC
-  getIt.registerFactory(() => BleBloc(
-    scanDevicesUseCase: getIt<ScanDevicesUseCase>(),
-    connectDeviceUseCase: getIt<ConnectDeviceUseCase>(),
-    streamDataUseCase: getIt<StreamDataUseCase>(),
-    updateFirmwareUseCase: getIt<UpdateFirmwareUseCase>(),
-  ));
+  getIt.registerFactory(
+    () => BleBloc(
+      scanDevicesUseCase: getIt<ScanDevicesUseCase>(),
+      connectDeviceUseCase: getIt<ConnectDeviceUseCase>(),
+      streamDataUseCase: getIt<StreamDataUseCase>(),
+      updateFirmwareUseCase: getIt<UpdateFirmwareUseCase>(),
+    ),
+  );
 }

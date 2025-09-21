@@ -29,8 +29,9 @@ void main() {
 
     test('should return stream of sensor data from repository', () async {
       // Arrange
-      when(() => mockBleRepository.streamSensorData(tDeviceId))
-          .thenAnswer((_) => Stream.value(Right(tSensorData)));
+      when(
+        () => mockBleRepository.streamSensorData(tDeviceId),
+      ).thenAnswer((_) => Stream.value(Right(tSensorData)));
 
       // Act
       final result = usecase(tDeviceId);
@@ -43,8 +44,9 @@ void main() {
     test('should return failure when repository fails', () async {
       // Arrange
       final tFailure = DataTransferFailure();
-      when(() => mockBleRepository.streamSensorData(tDeviceId))
-          .thenAnswer((_) => Stream.value(Left(tFailure)));
+      when(
+        () => mockBleRepository.streamSensorData(tDeviceId),
+      ).thenAnswer((_) => Stream.value(Left(tFailure)));
 
       // Act
       final result = usecase(tDeviceId);
@@ -64,11 +66,9 @@ void main() {
         batteryLevel: 84,
       );
 
-      when(() => mockBleRepository.streamSensorData(tDeviceId))
-          .thenAnswer((_) => Stream.fromIterable([
-                Right(tSensorData),
-                Right(tSensorData2),
-              ]));
+      when(() => mockBleRepository.streamSensorData(tDeviceId)).thenAnswer(
+        (_) => Stream.fromIterable([Right(tSensorData), Right(tSensorData2)]),
+      );
 
       // Act
       final result = usecase(tDeviceId);
@@ -76,10 +76,7 @@ void main() {
       // Assert
       await expectLater(
         result,
-        emitsInOrder([
-          Right(tSensorData),
-          Right(tSensorData2),
-        ]),
+        emitsInOrder([Right(tSensorData), Right(tSensorData2)]),
       );
     });
   });

@@ -6,9 +6,9 @@ import '../repositories/ble_repository.dart';
 
 class StreamDataUseCase implements StreamUseCase<SensorData, String> {
   final BleRepository repository;
-  
+
   StreamDataUseCase(this.repository);
-  
+
   @override
   Stream<Either<Failure, SensorData>> call(String deviceId) {
     return repository.streamSensorData(deviceId);

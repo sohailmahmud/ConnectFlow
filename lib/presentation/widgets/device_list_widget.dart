@@ -7,7 +7,7 @@ import '../bloc/ble_state.dart';
 
 class DeviceListWidget extends StatelessWidget {
   final BleState state;
-  
+
   const DeviceListWidget({super.key, required this.state});
 
   @override
@@ -37,25 +37,22 @@ class DeviceListWidget extends StatelessWidget {
             ],
           ),
         ),
-        if (state is BleScanning)
-          const LinearProgressIndicator(),
-        Expanded(
-          child: _buildDeviceList(),
-        ),
+        if (state is BleScanning) const LinearProgressIndicator(),
+        Expanded(child: _buildDeviceList()),
       ],
     );
   }
-  
+
   Widget _buildDeviceList() {
     if (state is BleDevicesFound) {
       final devices = (state as BleDevicesFound).devices;
-      
+
       if (devices.isEmpty) {
         return const Center(
           child: Text('No devices found. Try scanning again.'),
         );
       }
-      
+
       return ListView.builder(
         itemCount: devices.length,
         itemBuilder: (context, index) {
@@ -63,16 +60,14 @@ class DeviceListWidget extends StatelessWidget {
         },
       );
     }
-    
-    return const Center(
-      child: Text('Tap scan to find BLE devices'),
-    );
+
+    return const Center(child: Text('Tap scan to find BLE devices'));
   }
 }
 
 class DeviceListTile extends StatelessWidget {
   final BleDevice device;
-  
+
   const DeviceListTile({super.key, required this.device});
 
   @override
@@ -107,7 +102,7 @@ class DeviceListTile extends StatelessWidget {
       ),
     );
   }
-  
+
   Color _getRssiColor(int rssi) {
     if (rssi >= -40) return Colors.green;
     if (rssi >= -60) return Colors.orange;

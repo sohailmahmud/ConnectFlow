@@ -8,7 +8,7 @@ import '../bloc/ble_event.dart';
 class OtaUpdateWidget extends StatelessWidget {
   final BleDevice device;
   final OtaProgress progress;
-  
+
   const OtaUpdateWidget({
     super.key,
     required this.device,
@@ -29,11 +29,18 @@ class OtaUpdateWidget extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.system_update, size: 32, color: Colors.blue),
+                      const Icon(
+                        Icons.system_update,
+                        size: 32,
+                        color: Colors.blue,
+                      ),
                       const SizedBox(width: 16),
                       Text(
                         'Updating ${device.name}',
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -67,14 +74,20 @@ class OtaUpdateWidget extends StatelessWidget {
                   const SizedBox(height: 24),
                   Text(
                     '${(progress.progress * 100).toInt()}%',
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  if (progress.status == OtaStatus.completed || progress.status == OtaStatus.failed)
+                  if (progress.status == OtaStatus.completed ||
+                      progress.status == OtaStatus.failed)
                     Padding(
                       padding: const EdgeInsets.only(top: 16),
                       child: ElevatedButton(
                         onPressed: () {
-                          context.read<BleBloc>().add(DisconnectFromDeviceEvent(device.id));
+                          context.read<BleBloc>().add(
+                            DisconnectFromDeviceEvent(device.id),
+                          );
                         },
                         child: const Text('Done'),
                       ),
@@ -87,17 +100,14 @@ class OtaUpdateWidget extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildProgressIndicator() {
     switch (progress.status) {
       case OtaStatus.preparing:
       case OtaStatus.verifying:
         return const CircularProgressIndicator();
       case OtaStatus.transferring:
-        return LinearProgressIndicator(
-          value: progress.progress,
-          minHeight: 8,
-        );
+        return LinearProgressIndicator(value: progress.progress, minHeight: 8);
       case OtaStatus.completed:
         return const LinearProgressIndicator(
           value: 1.0,
@@ -116,7 +126,7 @@ class OtaUpdateWidget extends StatelessWidget {
         return const LinearProgressIndicator(value: 0);
     }
   }
-  
+
   String _getStatusText() {
     switch (progress.status) {
       case OtaStatus.idle:
@@ -133,7 +143,7 @@ class OtaUpdateWidget extends StatelessWidget {
         return 'Update failed';
     }
   }
-  
+
   Color _getStatusColor() {
     switch (progress.status) {
       case OtaStatus.completed:

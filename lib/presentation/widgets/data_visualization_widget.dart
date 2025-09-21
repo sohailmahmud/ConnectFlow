@@ -8,7 +8,7 @@ import '../bloc/ble_event.dart';
 class DataVisualizationWidget extends StatelessWidget {
   final BleDevice device;
   final List<SensorData> dataHistory;
-  
+
   const DataVisualizationWidget({
     super.key,
     required this.device,
@@ -18,7 +18,7 @@ class DataVisualizationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final latestData = dataHistory.isNotEmpty ? dataHistory.last : null;
-    
+
     return Column(
       children: [
         AppBar(
@@ -94,12 +94,13 @@ class DataVisualizationWidget extends StatelessWidget {
                         children: [
                           const Text(
                             'Data History',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           const SizedBox(height: 8),
-                          Expanded(
-                            child: _buildDataChart(),
-                          ),
+                          Expanded(child: _buildDataChart()),
                         ],
                       ),
                     ),
@@ -112,8 +113,13 @@ class DataVisualizationWidget extends StatelessWidget {
       ],
     );
   }
-  
-  Widget _buildDataCard(String title, String value, IconData icon, Color color) {
+
+  Widget _buildDataCard(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -134,22 +140,19 @@ class DataVisualizationWidget extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildDataChart() {
     if (dataHistory.isEmpty) {
       return const Center(child: Text('No data available'));
     }
-    
+
     return ListView.builder(
       itemCount: dataHistory.length,
       itemBuilder: (context, index) {
         final data = dataHistory[index];
         return ListTile(
           dense: true,
-          leading: CircleAvatar(
-            radius: 16,
-            child: Text('${index + 1}'),
-          ),
+          leading: CircleAvatar(radius: 16, child: Text('${index + 1}')),
           title: Text(
             '${data.temperature.toStringAsFixed(1)}°C, ${data.humidity.toStringAsFixed(1)}%',
           ),
@@ -164,7 +167,7 @@ class DataVisualizationWidget extends StatelessWidget {
       },
     );
   }
-  
+
   Color _getBatteryColor(int batteryLevel) {
     if (batteryLevel > 50) return Colors.green;
     if (batteryLevel > 20) return Colors.orange;

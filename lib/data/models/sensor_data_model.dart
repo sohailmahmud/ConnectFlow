@@ -8,7 +8,7 @@ class SensorDataModel extends SensorData {
     required super.pressure,
     required super.batteryLevel,
   });
-  
+
   factory SensorDataModel.fromJson(Map<String, dynamic> json) {
     return SensorDataModel(
       timestamp: DateTime.parse(json['timestamp']),
@@ -18,7 +18,7 @@ class SensorDataModel extends SensorData {
       batteryLevel: json['batteryLevel'],
     );
   }
-  
+
   Map<String, dynamic> toJson() {
     return {
       'timestamp': timestamp.toIso8601String(),

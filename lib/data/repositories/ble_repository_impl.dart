@@ -8,9 +8,9 @@ import '../datasources/ble_datasource.dart';
 
 class BleRepositoryImpl implements BleRepository {
   final BleDataSource dataSource;
-  
+
   BleRepositoryImpl(this.dataSource);
-  
+
   @override
   Stream<Either<Failure, List<BleDevice>>> scanForDevices() async* {
     try {
@@ -21,7 +21,7 @@ class BleRepositoryImpl implements BleRepository {
       yield Left(BleFailure('Failed to scan for devices: $e'));
     }
   }
-  
+
   @override
   Future<Either<Failure, BleDevice>> connectToDevice(String deviceId) async {
     try {
@@ -31,7 +31,7 @@ class BleRepositoryImpl implements BleRepository {
       return Left(ConnectionFailure());
     }
   }
-  
+
   @override
   Future<Either<Failure, void>> disconnectFromDevice(String deviceId) async {
     try {
@@ -41,7 +41,7 @@ class BleRepositoryImpl implements BleRepository {
       return Left(BleFailure('Failed to disconnect: $e'));
     }
   }
-  
+
   @override
   Stream<Either<Failure, SensorData>> streamSensorData(String deviceId) async* {
     try {
@@ -52,9 +52,12 @@ class BleRepositoryImpl implements BleRepository {
       yield Left(DataTransferFailure());
     }
   }
-  
+
   @override
-  Stream<Either<Failure, OtaProgress>> updateFirmware(String deviceId, List<int> firmwareData) async* {
+  Stream<Either<Failure, OtaProgress>> updateFirmware(
+    String deviceId,
+    List<int> firmwareData,
+  ) async* {
     try {
       // await for (final progress in dataSource.updateFirmware(deviceId, firmwareData)) {
       //   yield Right(progress);
@@ -63,7 +66,7 @@ class BleRepositoryImpl implements BleRepository {
       yield Left(OtaUpdateFailure('Firmware update failed: $e'));
     }
   }
-  
+
   @override
   Future<Either<Failure, bool>> isBluetoothEnabled() async {
     try {
@@ -73,7 +76,7 @@ class BleRepositoryImpl implements BleRepository {
       return Left(BleFailure('Failed to check Bluetooth status: $e'));
     }
   }
-  
+
   @override
   Future<Either<Failure, void>> enableBluetooth() async {
     try {

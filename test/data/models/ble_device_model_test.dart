@@ -55,17 +55,20 @@ void main() {
     });
 
     group('JSON serialization', () {
-      test('should maintain data integrity through serialize/deserialize cycle', () {
-        // Arrange
-        final jsonString = json.encode(tBleDeviceModel.toJson());
+      test(
+        'should maintain data integrity through serialize/deserialize cycle',
+        () {
+          // Arrange
+          final jsonString = json.encode(tBleDeviceModel.toJson());
 
-        // Act
-        final jsonMap = json.decode(jsonString);
-        final result = BleDeviceModel.fromJson(jsonMap);
+          // Act
+          final jsonMap = json.decode(jsonString);
+          final result = BleDeviceModel.fromJson(jsonMap);
 
-        // Assert
-        expect(result, tBleDeviceModel);
-      });
+          // Assert
+          expect(result, tBleDeviceModel);
+        },
+      );
     });
   });
 }
