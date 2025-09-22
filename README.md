@@ -6,7 +6,7 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.35.0+-02569B.svg?style=flat&logo=flutter&logoColor=white)](https://flutter.dev/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-lightgrey.svg?style=flat)](https://flutter.dev/)
-[![Test Coverage](https://img.shields.io/codecov/c/github/sohailmahmud/ConnectFlow?style=flat)](https://codecov.io/gh/sohailmahmud/ConnectFlow)
+[![Coverage Status](https://coveralls.io/repos/github/sohailmahmud/connectflow/badge.svg?branch=main)](https://github.com/sohailmahmud/ConnectFlow)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg?style=flat)](https://github.com/sohailmahmud/ConnectFlow)
 
 A professional-grade Flutter application for managing Bluetooth Low Energy (BLE) devices with real-time sensor monitoring, over-the-air firmware updates, and comprehensive device control capabilities.
