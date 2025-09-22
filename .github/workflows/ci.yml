@@ -40,13 +40,11 @@ jobs:
     - name: Run Unit Tests
       run: flutter test test/ --coverage --reporter=expanded
       
-    - name: Upload Coverage to Codecov
-      uses: codecov/codecov-action@v3
+    - name: Upload coverage to Coveralls
+      uses: coverallsapp/github-action@v2
       with:
-        file: coverage/lcov.info
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: coverage/lcov.info
 
   build-android:
     name: Build Android
